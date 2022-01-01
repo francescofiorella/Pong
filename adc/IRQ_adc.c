@@ -22,7 +22,7 @@ unsigned short AD_last = 0xFF;     /* Last converted value               */
 #define INTERVALS 15
 // valori calcolati per bilanciare la non idealità (per grandi spostamenti):
 // divide lo schermo in 15 intervalli,
-// se il paddle è su intervalli diversi (a distanza 3) per due volte di fila allora muove.
+// se il paddle è su intervalli diversi (a distanza 3) per tre volte di fila allora muove.
 unsigned short current_interval;
 unsigned short last_interval = 0xFF*INTERVALS/0xFFF;
 unsigned int counter = 0;

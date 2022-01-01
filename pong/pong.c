@@ -23,7 +23,7 @@
 
 // ball default movements
 #define BALL_X_MOVEMENT_DEFAULT -2
-#define BALL_Y_MOVEMENT_DEFAULT -2
+#define BALL_Y_MOVEMENT_DEFAULT 2
 
 typedef struct {
 	unsigned int x_start, y_start, x_end, y_end;
@@ -121,7 +121,7 @@ void initBall(unsigned int x, unsigned int y) { // init the ball
 	
 	// draw the new ball
 	for (i_new = y; i_new <= y1; i_new++){
-		LCD_DrawLine(x, i_new, x1, i_new, Green);
+		LCD_DrawLine(x, i_new, x1, i_new, White);
 	}
 	
 	// update the variables
@@ -132,73 +132,113 @@ void initBall(unsigned int x, unsigned int y) { // init the ball
 }
 
 void drawBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from "x" and "y"
-	unsigned int i, i_x, i_y, i_max, i_x_max, i_y_max; // contatore
-	int i_x_1, i_y_1; // contatore (offset)
+	unsigned int i, i_max, i_x_max, i_y_max; // contatore
+	unsigned int i_x = 0;
+	unsigned int i_y = 0;
+	unsigned int a = 0; // a e b consentono di cancellare 5 px anzichè 4 quando non vi è movimento su di un asse
+	unsigned int b = 0;
 	unsigned int x1 = x + 4;
 	unsigned int y1 = y + 4;
 	
-	int x_offset; // negativo se ball a sx, positivo se a dx
-	int y_offset; // negativo se ball a top, positivo se a bottom
-	unsigned int x_delete, x_draw, y_delete, y_draw;
+	unsigned int x1_delete1, x2_delete1, x1_delete2, x2_delete2, x1_draw1, x2_draw1, x1_draw2, x2_draw2;
+	unsigned int y1_delete1, y2_delete1, y1_delete2, y2_delete2, y1_draw1, y2_draw1, y1_draw2, y2_draw2;
 	
 	if (x >= 5 && y >= 5 && x <= 230 && y <= 315) {
-		x_offset = x - ball.x_start;		
-		y_offset = y - ball.y_start;		
-		if (abs(x_offset) < abs(y_offset)) {
-			i_max = abs(y_offset)-1;
+		if (abs(ball.x_movement) < abs(ball.y_movement)) {
+			i_max = abs(ball.y_movement)-1;
 		} else {
-			i_max = abs(x_offset)-1;
+			i_max = abs(ball.x_movement)-1;
 		}
 		
-		if (x_offset > 0) { // spostamento verso dx
-			x_delete = ball.x_start;
-			x_draw = ball.x_end+1;
-			i_x_max = x_offset-1;
+		if (ball.x_movement >= 0) { // spostamento verso dx
+			i_x_max = ball.x_movement-1;
 		} else { // spostamento verso sx
-			x_delete = ball.x_end;
-			x_draw = ball.x_start-1;
-			i_x_max = abs(x_offset)-1;
+			i_x_max = abs(ball.x_movement)-1;
 		}
 		
-		if(y_offset > 0) { // spostamento verso il basso
-			y_delete = ball.y_start;
-			y_draw = ball.y_end+1;
-			i_y_max = y_offset-1;
-		} else { // spostamento verso l'alto
-			y_delete = ball.y_end;
-			y_draw = ball.y_start-1;
-			i_y_max = abs(y_offset)-1;
+		if(ball.y_movement >= 0) { // spostamento verso il basso
+			i_y_max = ball.y_movement-1;
+		} else if (ball.y_movement < 0) { // spostamento verso l'alto
+			i_y_max = abs(ball.y_movement)-1;
 		}
 		
 		for (i = 0; i <= i_max; i++) {
-			if (x_offset > 0 && i <= i_x_max) {
-				i_x = i;
-				i_x_1 = i + 1;
-			} else if (i <= i_x_max){
-				i_x = -i;
-				i_x_1 = -(i + 1);
-			}
-			if (y_offset > 0 && i <= i_y_max) {
-				i_y = i;
-				i_y_1 = -1;
-			} else if (i <= i_y_max){
-				i_y = -i;
-				i_y_1 = -1;
+			if (ball.x_movement > 0) {
+				x1_delete1 = ball.x_start + i_x;
+				x2_delete1 = ball.x_start + i_x;
+				
+				x1_delete2 = ball.x_start + i_x + 1;
+				x2_delete2 = ball.x_end + i_x + a;
+				
+				x1_draw1 = ball.x_end + 1 + i_x;
+				x2_draw1 = ball.x_end + 1 + i_x;
+				
+				x1_draw2 = ball.x_start + 1 + i_x;
+				x2_draw2 = ball.x_end + 1 + i_x;
 			} else {
-				i_y_1 = 0;
+				x1_delete1 = ball.x_end - i_x;
+				x2_delete1 = ball.x_end - i_x;
+				
+				x1_delete2 = ball.x_start - i_x - a;
+				x2_delete2 = ball.x_end - i_x - 1;
+				
+				x1_draw1 = ball.x_start - 1 - i_x;
+				x2_draw1 = ball.x_start - 1 - i_x;
+				
+				x1_draw2 = ball.x_start - 1 - i_x;
+				x2_draw2 = ball.x_end - 1 - i_x;
+			}
+			if (ball.y_movement > 0) {
+				y1_delete1 = ball.y_start + i_y;
+				y2_delete1 = ball.y_end + i_y + b;
+				
+				y1_delete2 = ball.y_start + i_y;
+				y2_delete2 = ball.y_start + i_y;
+				
+				y1_draw1 = ball.y_start + 1 + i_y;
+				y2_draw1 = ball.y_end + i_y + b;
+				
+				y1_draw2 = ball.y_end + 1 + i_y;
+				y2_draw2 = ball.y_end + 1 + i_y;
+			} else {
+				y1_delete1 = ball.y_start - i_y - b;
+				y2_delete1 = ball.y_end - i_y;
+				
+				y1_delete2 = ball.y_end - i_y;
+				y2_delete2 = ball.y_end - i_y;
+				
+				y1_draw1 = ball.y_start - i_y - b;
+				y2_draw1 = ball.y_end -1 - i_y;
+				
+				y1_draw2 = ball.y_start - 1 - i_y;
+				y2_draw2 = ball.y_start - 1 - i_y;
 			}
 			
 			// delete the previous ball
 			if (i <= i_x_max)
-				LCD_DrawLine(x_delete+i_x, ball.y_start+i_y, x_delete+i_x, ball.y_end, Black); // vertical
+				LCD_DrawLine(x1_delete1, y1_delete1, x2_delete1, y2_delete1, Black); // vertical
 			if (i <= i_y_max)
-				LCD_DrawLine(ball.x_start, y_delete+i_y, x_delete+i_x_1, y_delete+i_y, Black); // horizontal
+				LCD_DrawLine(x1_delete2, y1_delete2, x2_delete2, y2_delete2, Black); // horizontal
 			
 			// draw the new ball
 			if (i <= i_x_max)
-				LCD_DrawLine(x_draw+i_x, y, x_draw+i_x, y_draw+i_y+i_y_1, Green); // vertical
+				LCD_DrawLine(x1_draw1, y1_draw1, x2_draw1, y2_draw1, White); // vertical
 			if (i <= i_y_max)
-				LCD_DrawLine(x_draw+i_x, y_draw+i_y, x1, y_draw+i_y, Green); // horizontal
+				LCD_DrawLine(x1_draw2, y1_draw2, x2_draw2, y2_draw2, White); // horizontal
+			
+			// incrementa gli indici ed imposta l'offset, se necessario
+			if (i+1 <= i_x_max) {
+				i_x++;
+				a = 0;
+			} else {
+				a = 1;
+			}
+			if (i+1 <= i_y_max) {
+				i_y++;
+				b = 0;
+			} else {
+				b = 1;
+			}
 		}
 		
 		// update the variables
@@ -229,7 +269,7 @@ void updateBestScore(unsigned int new_score) {
 	// cast int to string
 	sprintf(score_string, "%d  ", best_score);
 	
-	GUI_Text(180, 5, (uint8_t *) score_string, White, Black);
+	GUI_Text(180, 5, (uint8_t *) score_string, Yellow, Black);
 }
 
 void moveBall() {	
