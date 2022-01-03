@@ -1,10 +1,10 @@
 /*********************************************************************************************************
 **--------------File Info---------------------------------------------------------------------------------
 ** File name:           IRQ_RIT.c
-** Last modified Date:  2014-09-25
+** Last modified Date:  03/01/2022
 ** Last Version:        V1.00
-** Descriptions:        functions to manage T0 and T1 interrupts
-** Correlated files:    RIT.h
+** Descriptions:        functions to manage RIT interrupts
+** Correlated files:    RIT.h, timer.h, pong.h
 **--------------------------------------------------------------------------------------------------------
 *********************************************************************************************************/
 #include "lpc17xx.h"

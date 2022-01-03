@@ -7,16 +7,16 @@
 ** Descriptions:            The GLCD application function
 **
 **--------------------------------------------------------------------------------------------------------
-** Created by:              AVRman
-** Created date:            2010-11-7
-** Version:                 v1.0
-** Descriptions:            The original version
-**
-**--------------------------------------------------------------------------------------------------------
-** Modified by:             Paolo Bernardi
-** Modified date:           03/01/2020
+** Created by:              AVRman, Paolo Bernardi
+** Created date:            03/01/2022
 ** Version:                 v2.0
 ** Descriptions:            basic program for LCD and Touch Panel teaching
+**
+**--------------------------------------------------------------------------------------------------------
+** Modified by:             Francesco Fiorella
+** Modified date:           03/01/2022
+** Version:                 v3.0
+** Descriptions:            pong game
 **
 *********************************************************************************************************/
 

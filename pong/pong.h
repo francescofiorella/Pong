@@ -1,10 +1,10 @@
 /*********************************************************************************************************
 **--------------File Info---------------------------------------------------------------------------------
 ** File name:           pong.h
-** Last modified Date:  2021-12-16
+** Last modified Date:  03/01/2022
 ** Last Version:        V1.00
 ** Descriptions:        Prototypes of functions included in the pong.c file
-** Correlated files:    GLCD.c
+** Correlated files:    
 **--------------------------------------------------------------------------------------------------------
 *********************************************************************************************************/
 
@@ -24,7 +24,6 @@ extern void newPong( void );
 extern void setLost( void );
 extern void setPause( void );
 extern void setResume( void );
-extern char * intToString( int integer );
 
 /*********************************************************************************************************
       END FILE
