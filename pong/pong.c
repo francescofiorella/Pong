@@ -34,7 +34,7 @@ typedef struct {
 	unsigned int x_start, x_end;
 } Paddle;
 
-// variabili di gioco
+// game's variables
 Status game_status;
 unsigned int score, best_score;
 Ball ball;
@@ -48,7 +48,7 @@ void init_pong(void) {
 	
 	// paddle drawn by adc
 	game_status = STOPPED;
-	best_score = 100; // impostandolo prima, non viene scritto "New Best Score!"
+	best_score = 100; // setting it earlier, "New Best Score!" is not written
 	updateBestScore(best_score);
 	updateScore(0);
 	ball.x_movement = BALL_X_MOVEMENT_DEFAULT;
@@ -57,7 +57,7 @@ void init_pong(void) {
 }
 
 void drawBorders() {
-	unsigned int i; // contatore
+	unsigned int i; // counter
 	
 	for (i = 0; i <= 4; i++){
 		LCD_DrawLine(0, i, 239, i, Red);	// top border
@@ -66,25 +66,25 @@ void drawBorders() {
 	}
 }
 
-void drawPaddle(unsigned int start) { //draw a 31x10 paddle starting from "start" and 32px high from the bottom
-	unsigned int i, i_max; // contatore
-	int i1; // contatore (adjusted)
+void drawPaddle(unsigned int start) { // draw a 31x10px paddle starting from "start" and 32px high from the bottom
+	unsigned int i, i_max; // counter
+	int i1; // counter (adjusted)
 	unsigned int end = start + 30;
-	int offset; // negativo se paddle a sx, positivo se a dx
-	unsigned int x_delete, x_draw;
+	int offset; // negative if the paddle is moving to left, positive otherwise
+	unsigned int x_delete, x_draw; // LCD_DrawLine() arguments
 	
-	if (start >= 5 && start <= 204) { // se non si sovrappone ai bordi
+	if (start >= 5 && start <= 204) { // if does not overlap the borders
 		offset = start - paddle.x_start;		
-		if (offset > 0) { // spostamento verso dx
+		if (offset > 0) { // right movement
 			x_delete = paddle.x_start;
-			if (paddle.x_start == 0) { // paddle disegnato per la prima volta
+			if (paddle.x_start == 0) { // draw the paddle for the first time
 				x_draw = start;
 				i_max = 30;
 			} else {
 				x_draw = paddle.x_end;
 				i_max = offset;
 			}
-		} else { // spostamento verso sx
+		} else { // left movement
 			x_delete = paddle.x_end;
 			x_draw = paddle.x_start;
 			i_max = -offset;
@@ -97,7 +97,7 @@ void drawPaddle(unsigned int start) { //draw a 31x10 paddle starting from "start
 				i1 = -i;
 			}
 			// delete the previous paddle
-			if (paddle.x_start >= 5 && paddle.x_start <= 204) // solo se paddle già presente
+			if (paddle.x_start >= 5 && paddle.x_start <= 204) // only if the paddle is already drawn on screen
 				LCD_DrawLine(x_delete+i1, PADDLE_Y_START, x_delete+i1, PADDLE_Y_END, Black);
 			
 			// draw the new paddle
@@ -109,8 +109,8 @@ void drawPaddle(unsigned int start) { //draw a 31x10 paddle starting from "start
 	}
 }
 
-void initBall(unsigned int x, unsigned int y) { // init the ball
-	unsigned int i_old, i_new; // contatore
+void initBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from "x" and "y"
+	unsigned int i_old, i_new; // counter
 	unsigned int x1 = x + 4;
 	unsigned int y1 = y + 4;
 	
@@ -131,39 +131,32 @@ void initBall(unsigned int x, unsigned int y) { // init the ball
 	ball.y_end = y1;
 }
 
-void drawBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from "x" and "y"
-	unsigned int i, i_max, i_x_max, i_y_max; // contatore
+void drawBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from the previous one
+	unsigned int i, i_max, i_x_max, i_y_max; // counter
 	unsigned int i_x = 0;
 	unsigned int i_y = 0;
-	unsigned int a = 0; // a e b consentono di cancellare 5 px anzichè 4 quando non vi è movimento su di un asse
+	// "a" and "b" allow to delete 5px (instead of 4) when the ball is moving in one direction only
+	unsigned int a = 0;
 	unsigned int b = 0;
 	unsigned int x1 = x + 4;
 	unsigned int y1 = y + 4;
-	
+	// LCD_DrawLine() arguments
 	unsigned int x1_delete1, x2_delete1, x1_delete2, x2_delete2, x1_draw1, x2_draw1, x1_draw2, x2_draw2;
 	unsigned int y1_delete1, y2_delete1, y1_delete2, y2_delete2, y1_draw1, y2_draw1, y1_draw2, y2_draw2;
 	
 	if (x >= 5 && y >= 5 && x <= 230 && y <= 315) {
-		if (abs(ball.x_movement) < abs(ball.y_movement)) {
-			i_max = abs(ball.y_movement)-1;
+		// set the maximum number of iterations (x, y e total)		
+		i_x_max = abs(ball.x_movement)-1;
+		i_y_max = abs(ball.y_movement)-1;
+		if (i_x_max < i_y_max) {
+			i_max = i_y_max;
 		} else {
-			i_max = abs(ball.x_movement)-1;
-		}
-		
-		if (ball.x_movement >= 0) { // spostamento verso dx
-			i_x_max = ball.x_movement-1;
-		} else { // spostamento verso sx
-			i_x_max = abs(ball.x_movement)-1;
-		}
-		
-		if(ball.y_movement >= 0) { // spostamento verso il basso
-			i_y_max = ball.y_movement-1;
-		} else if (ball.y_movement < 0) { // spostamento verso l'alto
-			i_y_max = abs(ball.y_movement)-1;
+			i_max = i_x_max;
 		}
 		
 		for (i = 0; i <= i_max; i++) {
-			if (ball.x_movement > 0) {
+			// set LCD_DrawLine() arguments
+			if (ball.x_movement > 0) { // to right
 				x1_delete1 = ball.x_start + i_x;
 				x2_delete1 = ball.x_start + i_x;
 				
@@ -175,7 +168,7 @@ void drawBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from
 				
 				x1_draw2 = ball.x_start + 1 + i_x;
 				x2_draw2 = ball.x_end + 1 + i_x;
-			} else {
+			} else { // to left
 				x1_delete1 = ball.x_end - i_x;
 				x2_delete1 = ball.x_end - i_x;
 				
@@ -188,7 +181,7 @@ void drawBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from
 				x1_draw2 = ball.x_start - 1 - i_x;
 				x2_draw2 = ball.x_end - 1 - i_x;
 			}
-			if (ball.y_movement > 0) {
+			if (ball.y_movement > 0) { // to bottom
 				y1_delete1 = ball.y_start + i_y;
 				y2_delete1 = ball.y_end + i_y + b;
 				
@@ -200,7 +193,7 @@ void drawBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from
 				
 				y1_draw2 = ball.y_end + 1 + i_y;
 				y2_draw2 = ball.y_end + 1 + i_y;
-			} else {
+			} else { // to top
 				y1_delete1 = ball.y_start - i_y - b;
 				y2_delete1 = ball.y_end - i_y;
 				
@@ -226,7 +219,7 @@ void drawBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from
 			if (i <= i_y_max)
 				LCD_DrawLine(x1_draw2, y1_draw2, x2_draw2, y2_draw2, White); // horizontal
 			
-			// incrementa gli indici ed imposta l'offset, se necessario
+			// increment the indexes and set the offset, if necessary
 			if (i+1 <= i_x_max) {
 				i_x++;
 				a = 0;
@@ -252,7 +245,7 @@ void drawBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from
 void updateScore(unsigned int new_score) { // update the score
 	// cast int to string
 	char score_string[30];
-	sprintf(score_string, "%d      ", new_score); // + spazi bianchi per cancellare last score
+	sprintf(score_string, "%d   ", new_score); // + blank space to delethe the last score
 	
 	GUI_Text(5, 153, (uint8_t *) score_string, White, Black); // it's drawn in [156-164(px)], so 156 px from the top and 156 from the bottom
 	score = new_score;
@@ -267,7 +260,7 @@ void updateBestScore(unsigned int new_score) {
 	}
 	
 	// cast int to string
-	sprintf(score_string, "%d  ", best_score);
+	sprintf(score_string, "%d ", best_score);
 	
 	GUI_Text(180, 5, (uint8_t *) score_string, Yellow, Black);
 }
@@ -275,7 +268,7 @@ void updateBestScore(unsigned int new_score) {
 void moveBall() {	
 	int pixel_hit;
 	
-	// se sta riproducendo un suono, disabilitalo
+	// if the sound is on, disable it
 	if (is_sound_on) {
 		disable_timer(1);
 		reset_timer(1);
@@ -324,8 +317,8 @@ void moveBall() {
 				[....-00-01-02-03-04-05-06-07-08-09-10-11-12-13-14-15-16-17-18-19-20-21-22-23-24-25-26-27-28-29-30-....]
 				x-movement:
 				[ -6 |   -5   |   -4   |   -3   |   -2   |   -1   |00|   01   |   02   |   03   |   04   |   05   | 06 ]
-				Considerando y-movement = 2;
-				Angolo (in gradi) :
+				Considering y-movement = 2;
+				Corner (degrees) :
 				[18.4|  21.8  |  26.6  |  33.7  |   45   |  63.4  |90|  63.4  |   45   |  33.7  |  26.6  |  21.8  |18.4]
 			*/
 			
