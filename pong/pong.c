@@ -54,6 +54,10 @@ void init_pong(void) {
 	ball.x_movement = BALL_X_MOVEMENT_DEFAULT;
 	ball.y_movement = BALL_Y_MOVEMENT_DEFAULT;
 	initBall(230, 157); // ball in the middle
+	
+	
+	GUI_Text(55, 139, (uint8_t *) " Press KEY1 to   ", White, Black);
+	GUI_Text(60, 159, (uint8_t *) "start the game", White, Black);
 }
 
 void drawBorders() {
@@ -121,7 +125,7 @@ void initBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from
 	
 	// draw the new ball
 	for (i_new = y; i_new <= y1; i_new++){
-		LCD_DrawLine(x, i_new, x1, i_new, White);
+		LCD_DrawLine(x, i_new, x1, i_new, Green);
 	}
 	
 	// update the variables
@@ -132,7 +136,7 @@ void initBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from
 }
 
 void drawBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from the previous one
-	unsigned int i, i_max, i_x_max, i_y_max; // counter
+	int i, i_max, i_x_max, i_y_max; // counter
 	unsigned int i_x = 0;
 	unsigned int i_y = 0;
 	// "a" and "b" allow to delete 5px (instead of 4) when the ball is moving in one direction only
@@ -168,7 +172,7 @@ void drawBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from
 				
 				x1_draw2 = ball.x_start + 1 + i_x;
 				x2_draw2 = ball.x_end + 1 + i_x;
-			} else { // to left
+			} else if (ball.x_movement < 0) { // to left
 				x1_delete1 = ball.x_end - i_x;
 				x2_delete1 = ball.x_end - i_x;
 				
@@ -180,7 +184,20 @@ void drawBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from
 				
 				x1_draw2 = ball.x_start - 1 - i_x;
 				x2_draw2 = ball.x_end - 1 - i_x;
+			} else { // not moving on x
+				x1_delete1 = ball.x_end;
+				x2_delete1 = ball.x_end;
+				
+				x1_delete2 = ball.x_start;
+				x2_delete2 = ball.x_end;
+				
+				x1_draw1 = ball.x_start;
+				x2_draw1 = ball.x_start;
+				
+				x1_draw2 = ball.x_start;
+				x2_draw2 = ball.x_end;
 			}
+			
 			if (ball.y_movement > 0) { // to bottom
 				y1_delete1 = ball.y_start + i_y;
 				y2_delete1 = ball.y_end + i_y + b;
@@ -193,7 +210,7 @@ void drawBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from
 				
 				y1_draw2 = ball.y_end + 1 + i_y;
 				y2_draw2 = ball.y_end + 1 + i_y;
-			} else { // to top
+			} else if (ball.y_movement < 0) { // to top
 				y1_delete1 = ball.y_start - i_y - b;
 				y2_delete1 = ball.y_end - i_y;
 				
@@ -205,6 +222,18 @@ void drawBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from
 				
 				y1_draw2 = ball.y_start - 1 - i_y;
 				y2_draw2 = ball.y_start - 1 - i_y;
+			} else { // not moving on y (should not be possible)
+				y1_delete1 = ball.y_start;
+				y2_delete1 = ball.y_end;
+				
+				y1_delete2 = ball.y_end;
+				y2_delete2 = ball.y_end;
+				
+				y1_draw1 = ball.y_start;
+				y2_draw1 = ball.y_end;
+				
+				y1_draw2 = ball.y_start;
+				y2_draw2 = ball.y_start;
 			}
 			
 			// delete the previous ball
@@ -215,9 +244,9 @@ void drawBall(unsigned int x, unsigned int y) { // draw a 5x5 ball starting from
 			
 			// draw the new ball
 			if (i <= i_x_max)
-				LCD_DrawLine(x1_draw1, y1_draw1, x2_draw1, y2_draw1, White); // vertical
+				LCD_DrawLine(x1_draw1, y1_draw1, x2_draw1, y2_draw1, Green); // vertical
 			if (i <= i_y_max)
-				LCD_DrawLine(x1_draw2, y1_draw2, x2_draw2, y2_draw2, White); // horizontal
+				LCD_DrawLine(x1_draw2, y1_draw2, x2_draw2, y2_draw2, Green); // horizontal
 			
 			// increment the indexes and set the offset, if necessary
 			if (i+1 <= i_x_max) {
@@ -256,13 +285,20 @@ void updateBestScore(unsigned int new_score) {
 
 	if (new_score > best_score) {
 		best_score = new_score;
-		GUI_Text(60, 159, (uint8_t *) "New Best Score!", White, Black);
+		GUI_Text(60, 139, (uint8_t *) "New Best Score!", Yellow, Black);
 	}
 	
 	// cast int to string
-	sprintf(score_string, "%d ", best_score);
+	sprintf(score_string, "Best score: %d ", best_score);
 	
-	GUI_Text(180, 5, (uint8_t *) score_string, Yellow, Black);
+	GUI_Text(80, 5, (uint8_t *) score_string, White, Black);
+}
+
+void deleteBestScore() {
+	unsigned int i;
+	for (i = 80; i <= 230; i++) {
+		LCD_DrawLine(i, 5, i, 20, Black);
+	}
 }
 
 void moveBall() {	
@@ -358,9 +394,6 @@ void moveBall() {
 			} else {
 				updateScore(score + 10);
 			}
-			
-			// re-draw best score (could have been modified by the ball)
-			updateBestScore(best_score);
 		} else if (ball.y_movement > 0 && ball.y_end+ball.y_movement >= 319) { // you lost
 			setLost();
 		}
@@ -368,11 +401,11 @@ void moveBall() {
 	}
 }
 
-void newPong() { // if you lost, start a new game
+void newPong() { // if you lost, set again the parameters to the default values
 	if (game_status == LOST) {
 		game_status = STOPPED;
-		GUI_Text(85, 139, (uint8_t *) "You Lose", Black, Black); // delete the string
-		GUI_Text(60, 159, (uint8_t *) "New Best Score!", Black, Black); // delete the string
+		GUI_Text(55, 139, (uint8_t *) " Press KEY1 to   ", White, Black);
+		GUI_Text(60, 159, (uint8_t *) "start the game", White, Black);
 		updateScore(0);
 		ball.x_movement = BALL_X_MOVEMENT_DEFAULT;
 		ball.y_movement = BALL_Y_MOVEMENT_DEFAULT;
@@ -380,23 +413,36 @@ void newPong() { // if you lost, start a new game
 	}
 }
 
+void setStart() { // start the game
+	game_status = STARTED;
+	enable_timer(0);
+	deleteBestScore();
+	GUI_Text(55, 139, (uint8_t *) " Press KEY1 to   ", Black, Black); // delete the string
+	GUI_Text(60, 159, (uint8_t *) "start the game", Black, Black); // delete the string
+}
+
 void setLost() { // you lost
 	game_status = LOST;
 	disable_timer(0);
 	reset_timer(0);
-	GUI_Text(85, 139, (uint8_t *) "You Lose", White, Black);
+	GUI_Text(85, 159, (uint8_t *) "You Lose", White, Black);
 	updateScore(score); // re-draw score
 	updateBestScore(score);
 }
 
 void setPause() { // pause the game
 	game_status = PAUSED;
+	disable_timer(0);
+	reset_timer(0);
 	GUI_Text(88, 153, (uint8_t *) "Paused", White, Black);
+	updateBestScore(best_score); // draw the best score
 }
 
 void setResume() { // resume the game
 	game_status = STARTED;
+	deleteBestScore();
 	GUI_Text(88, 153, (uint8_t *) "Paused", Black, Black);
+	enable_timer(0);
 }
 
 /*********************************************************************************************************

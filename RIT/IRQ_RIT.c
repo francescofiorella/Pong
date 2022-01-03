@@ -9,7 +9,6 @@
 *********************************************************************************************************/
 #include "lpc17xx.h"
 #include "RIT.h"
-#include "../timer/timer.h"
 #include "../pong/pong.h"
 
 // variabili di gioco
@@ -43,8 +42,7 @@ void RIT_IRQHandler (void)
 				case 2:
 					if (game_status == STOPPED){
 						// start the game
-						game_status = STARTED;
-						enable_timer(0);
+						setStart();
 					}
 					break;
 				default:
@@ -67,12 +65,9 @@ void RIT_IRQHandler (void)
 					if (game_status == STARTED) {
 						// pause the game
 						setPause();
-						disable_timer(0);
-						reset_timer(0);
 					} else if (game_status == PAUSED) {
 						// resume the game
 						setResume();
-						enable_timer(0);
 					}
 					break;
 				default:
