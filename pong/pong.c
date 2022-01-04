@@ -48,16 +48,18 @@ void init_pong(void) {
 	
 	// paddle drawn by adc
 	game_status = STOPPED;
-	best_score = 100; // setting it earlier, "New Best Score!" is not written
+	best_score = 100; // if set earlier, "New Best Score!" is not written
 	updateBestScore(best_score);
 	updateScore(0);
 	ball.x_movement = BALL_X_MOVEMENT_DEFAULT;
 	ball.y_movement = BALL_Y_MOVEMENT_DEFAULT;
 	initBall(230, 157); // ball in the middle
 	
-	
-	GUI_Text(55, 139, (uint8_t *) " Press KEY1 to   ", White, Black);
-	GUI_Text(60, 159, (uint8_t *) "start the game", White, Black);
+	// draw the info
+	GUI_Text(65, 119, (uint8_t *) "Press KEY1 to", White, Black);
+	GUI_Text(60, 139, (uint8_t *) "start the game  ", White, Black);
+	GUI_Text(40, 179, (uint8_t *) "KEY2 to Pause/Resume", White, Black);
+	GUI_Text(60, 199, (uint8_t *) "INT0 to Reset", White, Black);
 }
 
 void drawBorders() {
@@ -404,8 +406,11 @@ void moveBall() {
 void newPong() { // if you lost, set again the parameters to the default values
 	if (game_status == LOST) {
 		game_status = STOPPED;
-		GUI_Text(55, 139, (uint8_t *) " Press KEY1 to   ", White, Black);
-		GUI_Text(60, 159, (uint8_t *) "start the game", White, Black);
+		GUI_Text(65, 119, (uint8_t *) "Press KEY1 to", White, Black);
+		GUI_Text(60, 139, (uint8_t *) "start the game  ", White, Black);
+		GUI_Text(85, 159, (uint8_t *) "You Lose", Black, Black); // delete the string
+		GUI_Text(40, 179, (uint8_t *) "KEY2 to Pause/Resume", White, Black);
+		GUI_Text(60, 199, (uint8_t *) "INT0 to Reset", White, Black);
 		updateScore(0);
 		ball.x_movement = BALL_X_MOVEMENT_DEFAULT;
 		ball.y_movement = BALL_Y_MOVEMENT_DEFAULT;
@@ -417,8 +422,11 @@ void setStart() { // start the game
 	game_status = STARTED;
 	enable_timer(0);
 	deleteBestScore();
-	GUI_Text(55, 139, (uint8_t *) " Press KEY1 to   ", Black, Black); // delete the string
-	GUI_Text(60, 159, (uint8_t *) "start the game", Black, Black); // delete the string
+	// delete the info
+	GUI_Text(65, 119, (uint8_t *) "Press KEY1 to", Black, Black);
+	GUI_Text(60, 139, (uint8_t *) "start the game  ", Black, Black);
+	GUI_Text(40, 179, (uint8_t *) "KEY2 to Pause/Resume", Black, Black);
+	GUI_Text(60, 199, (uint8_t *) "INT0 to Reset", Black, Black);
 }
 
 void setLost() { // you lost
