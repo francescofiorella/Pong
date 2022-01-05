@@ -41,7 +41,7 @@ void ADC_IRQHandler(void) {
 		
 		// non muovere se cambia 3 intervalli (ma non ci rimane per 3 esecuzioni dell'handler)
 		// in questo modo il normale movimento (che cambia un solo intervallo) non ferma l'esecuzione
-		sub_interval = current_interval-last_interval;
+		sub_interval = current_interval - last_interval;
 		if (counter < 2 && (sub_interval < -3 || sub_interval > 3)) {
 			counter++;
 			return;
@@ -51,23 +51,8 @@ void ADC_IRQHandler(void) {
 		position_current = AD_current*199/0xFFF + 5;
 		
 		sub_pixel = position_current - position_last;
-		// se spostamento compreso tra 1 e 4, deve essere in quell'intervallo per 3 volte di fila per portare ad uno spostamento
-		// idem per l'intervallo [-4, 0]
-		/*// se lo spostamento è minore di 5, conta
-		if (sub_pixel > 0 && sub_pixel < 5 && counter1 < 2) {
-			counter1++;
-			return;
-		}
-		counter1 = 0;
 		
-		// se lo spostamento è maggiore di -5, conta
-		if(sub_pixel > -5 && sub_pixel < 0 && counter2 < 2) {
-			counter2++;
-			return;
-		}
-		counter2 = 0;*/
-		
-		// impedisci gli spostamenti minori di 5 px, ok per il simulatore, da testare sulla scheda hardware
+		// impedisci gli spostamenti minori di 4 px, ok per il simulatore, da testare sulla scheda hardware
 		if(position_current != 0 && (sub_pixel < -4 || sub_pixel > 4)){
 			// 239 (tot px) - 10 (bordi sx e dx) - 30 (paddle width) = 199 -> poi shift a dx di 5 (bordo sx)
 			position_current = AD_current*199/0xFFF + 5;

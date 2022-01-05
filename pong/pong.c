@@ -39,7 +39,7 @@ Status game_status;
 unsigned int score, best_score;
 Ball ball;
 Paddle paddle;
-bool is_sound_on;
+unsigned int is_sound_on;
 
 void init_pong(void) {	
 	LCD_Clear(Black);
@@ -303,14 +303,35 @@ void deleteBestScore() {
 	}
 }
 
+// freqs:
+/* 
+131Hz		k=4240		C3
+147Hz		k=3779	D3
+165Hz		k=3367	E3
+175Hz		k=3175	F3
+196Hz		k=2834	G3
+220Hz		k=2525	A3
+247Hz		k=2249	B3
+262Hz		k=2120		C4
+294Hz		k=1890	D4
+330Hz		k=1684	E4
+349Hz		k=1592	F4
+392Hz		k=1417	G4
+440Hz		k=1263	A4
+494Hz		k=1125	B4
+523Hz		k=1062		C5
+*/
+
 void moveBall() {	
 	int pixel_hit;
 	
 	// if the sound is on, disable it
-	if (is_sound_on) {
+	if (is_sound_on > 1) {
+		is_sound_on = 0;
 		disable_timer(1);
 		reset_timer(1);
-		is_sound_on = false;
+	} else if (is_sound_on == 1) {
+		is_sound_on++;
 	}
 	
 	if (game_status == STARTED) {
@@ -320,8 +341,8 @@ void moveBall() {
 			ball.x_movement = - ball.x_movement;
 			
 			// emit a lower pitched note
-			is_sound_on = true;
-			init_timer(1, 4240);
+			is_sound_on = 1;
+			init_timer(1, 4240); // C3
 			enable_timer(1);
 		}
 		
@@ -331,8 +352,8 @@ void moveBall() {
 			ball.y_movement = - ball.y_movement;
 			
 			// emit a lower pitched note
-			is_sound_on = true;
-			init_timer(1, 4240);
+			is_sound_on = 1;
+			init_timer(1, 4240); // C3
 			enable_timer(1);
 		}
 		
@@ -342,13 +363,7 @@ void moveBall() {
 			&& ball.y_end < PADDLE_Y_START // paddle height not passed
 			&& ball.x_end >= paddle.x_start // end_ball compared to start_paddle
 			&& ball.x_start <= paddle.x_end) { // start_ball compared to end_paddle
-				ball.y_movement = - ball.y_movement;
-				
-			// emit a higher pitched note
-			is_sound_on = true;
-			init_timer(1, 2120);
-			enable_timer(1);
-			
+				ball.y_movement = - ball.y_movement;			
 			// set ball y-movement checking the central pixel of the ball
 			/*
 				Paddle bits:
@@ -396,6 +411,11 @@ void moveBall() {
 			} else {
 				updateScore(score + 10);
 			}
+			
+			// emit a higher pitched note
+			is_sound_on = 1;
+			init_timer(1, 2120); // C4
+			enable_timer(1);
 		} else if (ball.y_movement > 0 && ball.y_end+ball.y_movement >= 319) { // you lost
 			setLost();
 		}

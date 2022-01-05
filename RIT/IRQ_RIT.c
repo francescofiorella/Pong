@@ -11,7 +11,7 @@
 #include "RIT.h"
 #include "../pong/pong.h"
 
-// variabili di gioco
+// game variables
 extern Status game_status;
 extern int corner;
 

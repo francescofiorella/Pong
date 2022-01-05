@@ -52,8 +52,10 @@ int main(void)
 	
   BUTTON_init();												/* BUTTON Initialization              */
 	
-	init_RIT(0x004C4B40);									/* RIT Initialization 50 msec         */
-																				/* 0x004C4B40                         */
+	init_RIT(0x004C4B40);									/* RIT Initialization                 */
+																				/* T = K / Fr = 0x004C4B40 / 100MHz   */
+																				/* T = K / Fr = 5000000 / 100MHz      */
+																				/* T = 0.05s                          */
 	
 	enable_RIT();													/* RIT enabled												*/
 	
