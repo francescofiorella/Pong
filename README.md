@@ -13,3 +13,7 @@ Whenever the ball hits a wall or the paddle, the buzzer (loudspeaker) emits a lo
 Every time the ball hits the paddle, the score is incremented by 5. If the score is greater than 100, whenever the paddle touches the ball, it is incremented by 10 points. The score is printed on the left side of the screen, at mid high (160px from both the bottom and top part of the LCD). The score is saved in between games, and the new record (the maximum score since the board was last reset) is displayed in the top right corner. The initial record to beat is 100 points. Whenever the board is powered off or the RESET button is pressed, the score is reset as well. If the ball falls below the paddle, a message “You lose” is displayed.
 
 The user starts the game by pressing the button KEY1. When the game starts, the ball touches the right wall at mid high (160px from both the bottom and top part of the screen) and go downwards with an angle of 45°. To pause the game and later resume it, the user can press the button KEY2. In case of game over, to prepare a new game the player can press the INT0 button, followed by KEY1 to start it.
+
+_Homepage preview:_
+
+<img width="599" alt="pong_1_preview_1" src="https://user-images.githubusercontent.com/22116863/149002357-a1da94b4-7e4b-4a63-90ba-d259216f001a.png">
