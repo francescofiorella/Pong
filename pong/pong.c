@@ -368,11 +368,11 @@ void moveBall() {
 			/*
 				Paddle bits:
 				[....-00-01-02-03-04-05-06-07-08-09-10-11-12-13-14-15-16-17-18-19-20-21-22-23-24-25-26-27-28-29-30-....]
-				x-movement:
-				[ -6 |   -5   |   -4   |   -3   |   -2   |   -1   |00|   01   |   02   |   03   |   04   |   05   | 06 ]
+				x-movement: [DC = Don't Change]
+				[ -6 |   -5   |   -4   |   -3   |   -2   |   -1   |DC|   01   |   02   |   03   |   04   |   05   | 06 ]
 				Considering y-movement = 2;
 				Corner (degrees) :
-				[18.4|  21.8  |  26.6  |  33.7  |   45   |  63.4  |90|  63.4  |   45   |  33.7  |  26.6  |  21.8  |18.4]
+				[18.4|  21.8  |  26.6  |  33.7  |   45   |  63.4  |DC|  63.4  |   45   |  33.7  |  26.6  |  21.8  |18.4]
 			*/
 			
 			pixel_hit = ball.x_start + 2 - paddle.x_start;
@@ -389,9 +389,7 @@ void moveBall() {
 				ball.x_movement = -2;
 			} else if (pixel_hit <= 14) {
 				ball.x_movement = -1;
-			} else if (pixel_hit == 15) {
-				ball.x_movement = 0;
-			} else if (pixel_hit <= 18) {
+			} else if (pixel_hit != 15 && pixel_hit <= 18) {
 				ball.x_movement = 1;
 			} else if (pixel_hit <= 21) {
 				ball.x_movement = 2;
