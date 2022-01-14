@@ -20,4 +20,5 @@ _Homepage preview on the simulator:_
 
 
 _Gameplay on Landtiger board:_
+
 https://user-images.githubusercontent.com/22116863/149515833-98d72686-4179-4295-b004-7053c41fe064.mp4
