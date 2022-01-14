@@ -19,6 +19,6 @@ _Homepage preview on the simulator:_
 <img width="599" alt="pong_1_preview_1" src="https://user-images.githubusercontent.com/22116863/149002357-a1da94b4-7e4b-4a63-90ba-d259216f001a.png">
 
 
-_Gameplay on Landtiger board:_
+_Gameplay on the Landtiger board:_
 
 https://user-images.githubusercontent.com/22116863/149517125-3e898846-79b5-4493-b770-4d634653161e.mp4
