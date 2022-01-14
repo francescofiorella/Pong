@@ -67,8 +67,8 @@ void drawBorders() {
 	
 	for (i = 0; i <= 4; i++){
 		LCD_DrawLine(0, i, 239, i, Red);	// top border
-		LCD_DrawLine(i, 0, i, 277, Red);	// left border
-		LCD_DrawLine(239-i, 0, 239-i, 277, Red);	// right border
+		LCD_DrawLine(i, 0, i, 319, Red);	// left border
+		LCD_DrawLine(239-i, 0, 239-i, 319, Red);	// right border
 	}
 }
 
@@ -462,6 +462,12 @@ void setPause() { // pause the game
 	game_status = PAUSED;
 	disable_timer(0);
 	reset_timer(0);
+	
+	// disable sound (just to be sure)
+	is_sound_on = 0;
+	disable_timer(1);
+	reset_timer(1);
+	
 	GUI_Text(88, 153, (uint8_t *) "Paused", White, Black);
 	updateBestScore(best_score); // draw the best score
 }
