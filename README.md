@@ -17,3 +17,7 @@ The user can start the game by pressing the button KEY1. When the game starts, t
 _Homepage preview:_
 
 <img width="599" alt="pong_1_preview_1" src="https://user-images.githubusercontent.com/22116863/149002357-a1da94b4-7e4b-4a63-90ba-d259216f001a.png">
+
+
+_Gameplay on Landtiger board:_
+https://user-images.githubusercontent.com/22116863/149515833-98d72686-4179-4295-b004-7053c41fe064.mp4
