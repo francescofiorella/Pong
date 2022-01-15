@@ -210,8 +210,7 @@ uint32_t init_timer ( uint8_t timer_num, uint32_t TimerInterval )
 	else if (timer_num == 2)
 	{
 	LPC_SC->PCONP |= (1<<22); // enable timer 2 peripheral
-	LPC_TIM2->MR0 = TimerInterval / 16;
-	LPC_TIM2->MR1 = TimerInterval;
+	LPC_TIM2->MR0 = TimerInterval;
 		
 // <h> timer2 MCR
 //   <e.0> MR0I
