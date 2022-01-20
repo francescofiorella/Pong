@@ -120,12 +120,12 @@ void enableSound(int timer_num) {
 void newPong() { // if you lost, set again the parameters to the default values
 	if (game_status == ENDED) {
 		game_status = INITIAL;
+		GUI_Text(85, 159, (uint8_t *) "You Lose", Black, Black); // delete the string
+		updateScore(0);
 		GUI_Text(65, 119, (uint8_t *) "Press KEY1 to", White, Black);
 		GUI_Text(60, 139, (uint8_t *) "start the game  ", White, Black);
-		GUI_Text(85, 159, (uint8_t *) "You Lose", Black, Black); // delete the string
 		GUI_Text(40, 179, (uint8_t *) "KEY2 to Pause/Resume", White, Black);
 		GUI_Text(60, 199, (uint8_t *) "INT0 to Reset", White, Black);
-		updateScore(0);
 		resetBall();
 	}
 }
